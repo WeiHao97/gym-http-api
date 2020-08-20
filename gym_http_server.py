@@ -420,6 +420,25 @@ def shutdown():
     f()
     return 'Server shutting down'
 
+
+"""
+This app is crashing because https://bugs.python.org/issue24313
+Basically we cant jsonify numpy objects per this git issue
+https://github.com/openai/gym-http-api/issues/40#issuecomment-286903201
+This method solves that problem
+
+"""
+def convert(dict):
+    for k in dict.keys():
+        if isinstance(dict[k], list):
+            newlist = []
+            for g in dict[k]:
+                val = g.item()
+                newlist.append(val)
+            dict[k] = newlist
+    return dict
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Start a Gym HTTP API server')
     parser.add_argument('-l', '--listen', help='interface to listen to', default='127.0.0.1')
