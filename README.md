@@ -1,4 +1,16 @@
-**Status:** Archive (code is provided as-is, no updates expected)
+My python 3.* fork
+============
+Many people are running into the cant jsonify float bug. This fork solves that, at least in implementation which is javas DL4J. The old repo shouldnt be changed as it will break to many things. For Those of you looking to use this fork Ill exaplin how I used it with DL4J. Sorry for so much info but better to much than not enough.
+
+1.Get a python install working with tensorflow
+	To do this you should install pycharm. I assume you already have your normal ML installation working. Now you need to get the tensorflow version working. A good resource currently is https://github.com/jeffheaton/t81_558_deep_learning and check out his youtube channel as well for very current python istalls with 3.* and tensorflow 2.*
+	
+2. Get a gym and atari install working with tensorflow in pycharm
+If you followed the instruction above you should have a tensorflow install with tensorflow as your execution enviroment in your ide. Within your ide install the gym api. This might be trick. When  you can run the script included in this repo, test.py, you should have the basic gyms plus the atari
+
+3.Set up the server
+Within your pycharm ide and the tensorflow enviroment perform the normal installation instructions below. Then run your client software to see if you get a connection.
+
 
 <img align="left" src="http://i.imgur.com/568Luwb.png">gym-http-api
 ============
