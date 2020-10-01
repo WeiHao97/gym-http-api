@@ -48,9 +48,9 @@ std::string require(const Json::Value& v, const std::string& k)
 }
 
 static
-boost::shared_ptr<Space> space_from_json(const Json::Value& j)
+std::shared_ptr<Space> space_from_json(const Json::Value& j)
 {
-	boost::shared_ptr<Space> r(new Space);
+	std::shared_ptr<Space> r(new Space);
 	Json::Value v = j["info"];
 	std::string type = require(v, "name");
 	if (type=="Discrete") {
@@ -106,8 +106,8 @@ public:
 	std::string addr;
 	int port;
 
-	boost::shared_ptr<CURL> h;
-	boost::shared_ptr<curl_slist> headers;
+	std::shared_ptr<CURL> h;
+	std::shared_ptr<curl_slist> headers;
 	std::vector<char> curl_error_buf;
 
 	ClientReal()
@@ -195,12 +195,12 @@ public:
 		}
 	}
 
-	boost::shared_ptr<Environment> make(const std::string& env_id) override;
+	std::shared_ptr<Environment> make(const std::string& env_id) override;
 };
 
-boost::shared_ptr<Client> client_create(const std::string& addr, int port)
+std::shared_ptr<Client> client_create(const std::string& addr, int port)
 {
-	boost::shared_ptr<ClientReal> client(new ClientReal);
+	std::shared_ptr<ClientReal> client(new ClientReal);
 	client->addr = addr;
 	client->port = port;
 	return client;
@@ -212,18 +212,18 @@ boost::shared_ptr<Client> client_create(const std::string& addr, int port)
 class EnvironmentReal: public Environment {
 public:
 	std::string instance_id;
-	boost::shared_ptr<ClientReal> client;
-	boost::shared_ptr<Space> space_act;
-	boost::shared_ptr<Space> space_obs;
+	std::shared_ptr<ClientReal> client;
+	std::shared_ptr<Space> space_act;
+	std::shared_ptr<Space> space_obs;
 
-	boost::shared_ptr<Space> action_space() override
+	std::shared_ptr<Space> action_space() override
 	{
 		if (!space_act)
 			space_act = space_from_json(client->GET("/v1/envs/" + instance_id + "/action_space"));
 		return space_act;
 	}
 
-	boost::shared_ptr<Space> observation_space() override
+	std::shared_ptr<Space> observation_space() override
 	{
 		if (!space_obs)
 			space_obs = space_from_json(client->GET("/v1/envs/" + instance_id + "/observation_space"));
@@ -249,7 +249,7 @@ public:
 	void step(const std::vector<float>& action, bool render, State* save_state_here) override
 	{
 		Json::Value act_json;
-		boost::shared_ptr<Space> aspace = action_space();
+		std::shared_ptr<Space> aspace = action_space();
 		if (aspace->type==Space::DISCRETE) {
 			act_json["action"] = (int) action[0];
 		} else if (aspace->type==Space::BOX) {
@@ -282,14 +282,14 @@ public:
 	}
 };
 
-boost::shared_ptr<Environment> ClientReal::make(const std::string& env_id)
+std::shared_ptr<Environment> ClientReal::make(const std::string& env_id)
 {
 	Json::Value req;
 	req["env_id"] = env_id;
 	Json::Value ans = POST("/v1/envs/", req.toStyledString());
 	std::string instance_id = require(ans, "instance_id");
 	if (verbose) printf(" * created %s instance_id=%s\n", env_id.c_str(), instance_id.c_str());
-	boost::shared_ptr<EnvironmentReal> env(new EnvironmentReal);
+	std::shared_ptr<EnvironmentReal> env(new EnvironmentReal);
 	env->client = shared_from_this();
 	env->instance_id = instance_id;
 	return env;

@@ -1,14 +1,15 @@
 #include "include/gym/gym.h"
+#include <cassert>
 
 static
 void run_single_environment(
-	const boost::shared_ptr<Gym::Client>& client,
+	const std::shared_ptr<Gym::Client>& client,
 	const std::string& env_id,
 	int episodes_to_run)
 {
-	boost::shared_ptr<Gym::Environment> env = client->make(env_id);
-	boost::shared_ptr<Gym::Space> action_space = env->action_space();
-	boost::shared_ptr<Gym::Space> observation_space = env->observation_space();
+	std::shared_ptr<Gym::Environment> env = client->make(env_id);
+	std::shared_ptr<Gym::Space> action_space = env->action_space();
+	std::shared_ptr<Gym::Space> observation_space = env->observation_space();
 
 	for (int e=0; e<episodes_to_run; ++e) {
 		printf("%s episode %i...\n", env_id.c_str(), e);
@@ -32,7 +33,7 @@ void run_single_environment(
 int main(int argc, char** argv)
 {
 	try {
-		boost::shared_ptr<Gym::Client> client = Gym::client_create("127.0.0.1", 5000);
+		std::shared_ptr<Gym::Client> client = Gym::client_create("127.0.0.1", 5000);
 		run_single_environment(client, "Breakout-v0", 3);
 
 	} catch (const std::exception& e) {
