@@ -1,7 +1,7 @@
 #ifndef __GYM_H__
 #define __GYM_H__
-// Caffe uses std::shared_ptr (as opposed to std::shared_ptr), so do we.
-//#include <boost/shared_ptr.hpp>
+// Caffe uses boost::shared_ptr (as opposed to std::shared_ptr), so do we.
+#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <string>
 #include <memory>
@@ -32,8 +32,8 @@ struct State {
 
 class Environment {
 public:
-	virtual std::shared_ptr<Space> action_space() =0;
-	virtual std::shared_ptr<Space> observation_space() =0;
+	virtual boost::shared_ptr<Space> action_space() =0;
+	virtual boost::shared_ptr<Space> observation_space() =0;
 
 	virtual void reset(State* save_initial_state_here) =0;
 
@@ -45,10 +45,10 @@ public:
 
 class Client {
 public:
-	virtual std::shared_ptr<Environment> make(const std::string& name) =0;
+	virtual boost::shared_ptr<Environment> make(const std::string& name) =0;
 };
 
-extern std::shared_ptr<Client> client_create(const std::string& addr, int port);
+extern boost::shared_ptr<Client> client_create(const std::string& addr, int port);
 
 } // namespace
 
